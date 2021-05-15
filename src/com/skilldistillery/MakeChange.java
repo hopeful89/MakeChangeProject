@@ -11,22 +11,35 @@ public class MakeChange {
 		MakeChange checkout = new MakeChange();
 
 		// PROMPT USER FOR INPUT AND STORE
-
-//		checkout.promptCustomer("getItem");
-//		double itemPrice = scanner.nextDouble();
-//		
-//		checkout.promptCustomer("");
-//		double tender = scanner.nextDouble();
-//
-//		checkout.changeReturn(itemPrice, tender);
-		checkout.changeReturn(0.1, 1.02);
-
+		boolean enteringItems = true;
+		
+		while(enteringItems) {
+			checkout.promptCustomer("getItem");
+			double itemPrice = scanner.nextDouble();
+			
+			checkout.promptCustomer("");
+			double tender = scanner.nextDouble();
+			
+			checkout.changeReturn(itemPrice, tender);
+			checkout.promptCustomer("continue");
+			
+			String customerOption = scanner.next();
+			
+			if(customerOption.equalsIgnoreCase("Y") || customerOption.equalsIgnoreCase("Yes")) {
+				continue;
+			}else {
+				enteringItems = false;
+			}
+		}
+		scanner.close();
 	}
 
 	private void promptCustomer(String type) {
-		if (type.equals("getItem")) {
+		if(type.equals("continue")){
+			System.out.print("Would you like to enter another item Y | N: ");
+		}else if (type.equals("getItem")) {
 			System.out.print("Please enter the item price: ");
-		} else {
+		}else {
 			System.out.print("Please enter tender provided: ");
 		}
 	}
@@ -94,9 +107,9 @@ public class MakeChange {
 
 	// CALL STRING BUILDER
 
-		tempString = userChangeStringBuilder(tempString, ten, "ten dollar", " bill,", " bills,");
-		tempString = userChangeStringBuilder(tempString, five, "five dollar", " bill,", " bills,");
-		tempString = userChangeStringBuilder(tempString, one, "one dollar", " bill,", " bills,");
+		tempString = userChangeStringBuilder(tempString, ten, "ten dollar", " bill,", "bills,");
+		tempString = userChangeStringBuilder(tempString, five, "five dollar", " bill,", "bills,");
+		tempString = userChangeStringBuilder(tempString, one, "one dollar", " bill,", "bills,");
 		tempString = userChangeStringBuilder(tempString, quarter, "quarter,", "", "quarters,");
 		tempString = userChangeStringBuilder(tempString, dime, "dime,", "", "dimes,");
 		tempString = userChangeStringBuilder(tempString, nickel, "nickel,", "", "nickels,");
@@ -118,10 +131,7 @@ public class MakeChange {
 
 		if (typeOfCurrency > 1) {
 
-			if (billType.equals("penny")) {
-				current += " " + typeOfCurrency + " " + billPlural;
-				return current;
-			} else if (billType.equals("quarter,")) {
+			if (billType.contains("quarter") || billType.contains("dime") || billType.contains("nickel") || billType.contains("penny")) {
 				current += " " + typeOfCurrency + " " + billPlural;
 				return current;
 			} else {
