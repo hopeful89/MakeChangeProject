@@ -37,10 +37,13 @@ public class MakeChange {
 
 	private void promptCustomer(String type) {
 		if (type.equals("continue")) {
+			
 			System.out.print("Would you like to enter another item Y | N: ");
 		} else if (type.equals("getItem")) {
+			
 			System.out.print("Please enter the item price: ");
 		} else {
+
 			System.out.print("Please enter tender provided: ");
 		}
 	}
@@ -53,7 +56,7 @@ public class MakeChange {
 			return true;
 		}
 
-		System.out.printf("Amount: %.2f, Tendered: %.2f, Result: Error message", itemPrice, tender);
+		System.out.printf("Amount: %.2f, Tendered: %.2f, Result: Error message\n", itemPrice, tender);
 
 		return false;
 	}
@@ -93,7 +96,7 @@ public class MakeChange {
 		}
 	}
 
-	// RETURNS MAX BILLS DIVISIBLE 
+	// RETURNS MAX BILLS DIVISIBLE
 
 	private double changeCounter(double changeAmount, double maxBillSize) {
 		return changeAmount / maxBillSize;
@@ -128,8 +131,8 @@ public class MakeChange {
 
 	// PROVIDES STRING FOR OUTPUT
 
-	private String userChangeStringBuilder(String currentString, int typeOfCurrency, String billType, String billSingular,
-			String billPlural) {
+	private String userChangeStringBuilder(String currentString, int typeOfCurrency, String billType,
+			String billSingular, String billPlural) {
 
 		if (typeOfCurrency > 1) {
 
