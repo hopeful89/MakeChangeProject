@@ -10,13 +10,16 @@ public class MakeChange {
 
 		MakeChange checkout = new MakeChange();
 
-		checkout.promptCustomer("getItem");
-		double itemPrice = scanner.nextDouble();
-		checkout.promptCustomer("");
-		double tender = scanner.nextDouble();
+		// PROMPT USER FOR INPUT AND STORE
 
-		checkout.changeReturn(itemPrice, tender);
-
+//		checkout.promptCustomer("getItem");
+//		double itemPrice = scanner.nextDouble();
+//		
+//		checkout.promptCustomer("");
+//		double tender = scanner.nextDouble();
+//
+//		checkout.changeReturn(itemPrice, tender);
+		checkout.changeReturn(0.1, 1.02);
 
 	}
 
@@ -28,8 +31,10 @@ public class MakeChange {
 		}
 	}
 
+	// CHECKS IF ENOUGH TENDER WAS PROVIDED FOR PURCHASE
+
 	private boolean verifyEnoughTender(double itemPrice, double tender) {
-		if (tender >= itemPrice) {
+		if (tender >= itemPrice && itemPrice > 0) {
 			return true;
 		}
 
@@ -39,10 +44,10 @@ public class MakeChange {
 	}
 
 	private void changeReturn(double itemPrice, double tender) {
-		
-		//verify enough tender for purchase//
-			
-		if (verifyEnoughTender(itemPrice, tender)) {            
+
+	// VERIFY ENOUGH TENDER FOR PURCHASE //
+
+		if (verifyEnoughTender(itemPrice, tender)) {
 
 			double changeAmount = tender - itemPrice;
 
@@ -66,65 +71,83 @@ public class MakeChange {
 
 			int penny = (int) (changeCounter(changeAmount, .01) + .5);
 			changeAmount %= .01;
-			
-			//user Output invocation
-			
+
+	// USER OUTPUT INVOCATION
+
 			userChangeProvided(tenDollar, fiveDollar, oneDollar, quarter, dime, nickel, penny, itemPrice, tender);
 		}
 	}
 
-	// Returns max times you can receive a bill from changeAmount
+	// RETURNS MAX BILLS DIVISIBLE
+
 	private double changeCounter(double changeAmount, double modForCash) {
 		return changeAmount / modForCash;
 	}
 
-	// Concatenate a string for user output of change
+	// OUTPUTS FINAL RESULT FROM STRING BUILDER TO USER
+
 	private void userChangeProvided(int ten, int five, int one, int quarter, int dime, int nickel, int penny,
 			double itemPrice, double tender) {
-		
-		String result = String.format("Amount: %.2f, Tendered: %.2f, Result:", itemPrice, tender);
-		
-		//TODO refactor into method
-		
-		if (ten > 1) {
-			result += " " + ten + " ten dollar bills,";
-		} else if (ten > 0) {
-			result += " " + ten + " ten dollar bill,";
-		}
-		if (five > 1) {
-			result += " " + five + " five dollar bills,";
-		} else if (five > 0) {
-			result += " " + five + " five dollar bill,";
-		}
-		if (one > 1) {
-			result += " " + one + " one dollar bills,";
-		} else if (one > 0) {
-			result += " " + one + " one dollar bill,";
-		}
-		if (quarter > 1) {
-			result += " " + quarter + " quarters,";
-		} else if (quarter > 0) {
-			result += " " + quarter + " quarter,";
-		}
-		if (dime > 1) {
-			result += " " + dime + " dimes,";
-		} else if (dime > 0) {
-			result += " " + dime + " dime,";
-		}
-		if (nickel > 1) {
-			result += " " + nickel + " nickles,";
-		} else if (nickel > 0) {
-			result += " " + nickel + " nickel,";
-		}
-		//TODO remove the commas if only a penny in string
-		if (penny > 1) {
-			result += " " + penny + " pennies.";
-		} else if (penny > 0) {
-			result += " " + penny + " penny.";
-		}
 
-		System.out.println(result);
-		//TODO account for missing certain currencies on output with commas
+		String finalResult = String.format("Amount: %.2f, Tendered: %.2f, Result:", itemPrice, tender);
+		String tempString = "";
+
+	// CALL STRING BUILDER
+
+		tempString = userChangeStringBuilder(tempString, ten, "ten dollar", " bill,", " bills,");
+		tempString = userChangeStringBuilder(tempString, five, "five dollar", " bill,", " bills,");
+		tempString = userChangeStringBuilder(tempString, one, "one dollar", " bill,", " bills,");
+		tempString = userChangeStringBuilder(tempString, quarter, "quarter,", "", "quarters,");
+		tempString = userChangeStringBuilder(tempString, dime, "dime,", "", "dimes,");
+		tempString = userChangeStringBuilder(tempString, nickel, "nickel,", "", "nickels,");
+		tempString = userChangeStringBuilder(tempString, penny, "penny", "", "pennies");
+
+	// REMOVE COMMAS AT END IF REQUIRED
+
+		tempString = checkRemoveComma(tempString);
+
+		finalResult += tempString + ".";
+
+		System.out.println(finalResult);
 	}
 
+	// PROVIDES STRING FOR OUTPUT
+
+	private String userChangeStringBuilder(String current, int typeOfCurrency, String billType, String billSingular,
+			String billPlural) {
+
+		if (typeOfCurrency > 1) {
+
+			if (billType.equals("penny")) {
+				current += " " + typeOfCurrency + " " + billPlural;
+				return current;
+			} else if (billType.equals("quarter,")) {
+				current += " " + typeOfCurrency + " " + billPlural;
+				return current;
+			} else {
+				current += " " + typeOfCurrency + " " + billType + " " + billPlural;
+				return current;
+			}
+
+		} else if (typeOfCurrency > 0) {
+			current += " " + typeOfCurrency + " " + billType + billSingular;
+			return current;
+		} else {
+			return current;
+		}
+	}
+
+	// CHECKS FOR COMMAS IN THE CASE THAT THERE IS NO PENNIES
+
+	private String checkRemoveComma(String tempString) {
+
+		int length = tempString.length();
+		String lastChar = String.valueOf(tempString.charAt(length - 1));
+
+		if (lastChar.equals(",")) {
+			return tempString.substring(0, length - 1);
+		} else {
+			return tempString;
+		}
+	}
 }
